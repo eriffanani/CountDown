@@ -10,7 +10,7 @@ maven { url 'https://jitpack.io' }
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:DelayAfter:1.0.0'
+implementation 'com.github.eriffanani:DelayAfter:1.0.1'
 ```
 
 ## How to use
