@@ -1,4 +1,4 @@
-# Delay Timer
+# Count Down
 This is a shortcut code for you to create a schedule timer and provide an action after the timer finishes running.
 
 ## Installation
@@ -10,7 +10,7 @@ maven { url 'https://jitpack.io' }
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:DelayAfter:1.0.1'
+implementation 'com.github.eriffanani:CountDown:1.0.1'
 ```
 
 ## How to use
