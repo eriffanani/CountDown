@@ -1,4 +1,4 @@
-package com.erif.library;
+package com.erif.CountDown;
 
 import org.junit.Test;
 
