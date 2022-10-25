@@ -10,7 +10,7 @@ maven { url 'https://jitpack.io' }
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:CountDown:1.0.1'
+implementation 'com.github.eriffanani:CountDown:1.1.0'
 ```
 
 ## How to use
