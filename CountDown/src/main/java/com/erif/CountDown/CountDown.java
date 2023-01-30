@@ -133,6 +133,8 @@ public class CountDown {
                     if (isRunning) {
                         isRunning = false;
                         timer.cancel();
+                        if (callback != null)
+                            callback.onPause();
                     }
                 }
             }
@@ -143,9 +145,8 @@ public class CountDown {
                 if (isRunning) {
                     isRunning = false;
                     timer.cancel();
-                    if (callback != null) {
-                        callback.onFinish();
-                    }
+                    if (callback != null)
+                        callback.onStop();
                 }
             }
         }
@@ -158,6 +159,7 @@ public class CountDown {
                     if (duration > 0) {
                         timer = new Timer(newDuration, 1000, callback);
                         timer.start();
+                        callback.onResume();
                     } else {
                         if (callback != null)
                             callback.onFinish();
