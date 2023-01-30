@@ -12,7 +12,7 @@ maven { url 'https://jitpack.io' }
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:CountDown:1.1.0'
+implementation 'com.github.eriffanani:CountDown:1.2.0'
 ```
 
 ## How to use
@@ -48,6 +48,12 @@ new CountDown(duration, new CountDownListener() {
         int seconds = times.getSeconds();
         long millis = times.getMillis();
     }
+    @Override
+    public void onPause() {}
+    @Override
+    public void onStop() {}
+    @Override
+    public void onResume() {}
 });
 ```
 * Kotlin
@@ -62,6 +68,9 @@ CountDown(duration, object : CountDownListener {
         val time = "$hours:$minutes:$seconds"
         textview.text = time
     }
+    override fun onStop() {}
+    override fun onPause() {}
+    override fun onResume() {}
 })
 ```
 
