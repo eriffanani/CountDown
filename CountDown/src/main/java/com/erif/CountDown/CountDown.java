@@ -11,46 +11,60 @@ import java.util.Locale;
 public class CountDown {
 
     private static final int interval = 1000;
-    private Locale locale = Locale.getDefault();
+    private int duration = 0;
+    private Boolean loop = false;
+    private final CountDownListener callback;
 
     public CountDown(long millis, CountDownListener callback) {
-        startTimer((int) millis, callback);
+        this.duration = (int) millis;
+        this.callback = callback;
+        startTimer();
     }
 
     public CountDown(int seconds, CountDownListener callback) {
-        int duration = seconds * 1000;
-        startTimer(duration, callback);
+        this.duration = seconds * 1000;
+        this.callback = callback;
+        startTimer();
+    }
+
+    public CountDown(int seconds, Boolean loop, CountDownListener callback) {
+        this.duration = seconds * 1000;
+        this.loop = loop;
+        this.callback = callback;
+        startTimer();
     }
 
     public CountDown(String date, String dateFormat, CountDownListener callback) {
+        this.callback = callback;
         String currentDateTimeStr = currentDateTime(dateFormat);
         if (currentDateTimeStr != null) {
             Date firstDate = parseDate(date, dateFormat);
             Date currentDate = parseDate(currentDateTimeStr, dateFormat);
             if (firstDate != null && currentDate != null) {
                 long count = firstDate.getTime() - currentDate.getTime();
-                int duration = (int) count;
-                startTimer(duration, callback);
+                this.duration = (int) count;
+                startTimer();
             }
         }
     }
 
     public CountDown(String date, String dateFormat, Locale locale, CountDownListener callback) {
+        this.callback = callback;
         String currentDateTimeStr = currentDateTime(dateFormat, locale);
         if (currentDateTimeStr != null) {
             Date firstDate = parseDate(date, dateFormat, locale);
             Date currentDate = parseDate(currentDateTimeStr, dateFormat, locale);
             if (firstDate != null && currentDate != null) {
                 long count = firstDate.getTime() - currentDate.getTime();
-                int duration = (int) count;
-                startTimer(duration, callback);
+                this.duration = (int) count;
+                startTimer();
             }
         }
     }
 
-    private void startTimer(int duration, CountDownListener callback) {
+    private void startTimer() {
         if (duration > 0) {
-            Timer timer = new Timer(duration, interval, callback);
+            Timer timer = new Timer(duration, interval, loop, callback);
             timer.start();
         } else {
             callback.onFinish();
@@ -59,9 +73,13 @@ public class CountDown {
 
     private static class Timer extends CountDownTimer {
         private final CountDownListener callback;
-        private Timer(long millisInFuture, long countDownInterval, CountDownListener callback) {
+        private final long millisInFuture;
+        private final Boolean loop;
+        private Timer(long millisInFuture, long countDownInterval, Boolean loop, CountDownListener callback) {
             super(millisInFuture, countDownInterval);
+            this.millisInFuture = millisInFuture;
             this.callback = callback;
+            this.loop = loop;
         }
         @Override
         public void onTick(long millis) {
@@ -70,13 +88,19 @@ public class CountDown {
         @Override
         public void onFinish() {
             callback.onFinish();
+            if (loop) {
+                Timer timer = new Timer(millisInFuture, interval, true, callback);
+                timer.start();
+            }
         }
 
     }
 
     public static class Builder {
 
+        private static final int interval = 1000;
         private int duration = 0;
+        private Boolean loop = false;
         private final CountDownListener callback;
         private Timer timer;
         private int currentMillis = 0;
@@ -90,6 +114,12 @@ public class CountDown {
 
         public Builder(int seconds, CountDownListener callback) {
             this.duration = seconds * 1000;
+            this.callback = callback;
+        }
+
+        public Builder(int seconds, Boolean loop, CountDownListener callback) {
+            this.duration = seconds * 1000;
+            this.loop = loop;
             this.callback = callback;
         }
 
@@ -123,8 +153,10 @@ public class CountDown {
 
         private class Timer extends CountDownTimer {
             private final CountDownListener callback;
-            private Timer(long millisInFuture, long countDownInterval, CountDownListener callback) {
+            private final Boolean loop;
+            private Timer(long millisInFuture, long countDownInterval, Boolean loop, CountDownListener callback) {
                 super(millisInFuture, countDownInterval);
+                this.loop = loop;
                 this.callback = callback;
             }
             @Override
@@ -137,6 +169,10 @@ public class CountDown {
             public void onFinish() {
                 callback.onFinish();
                 isRunning = false;
+                if (loop) {
+                    timer = new Timer(duration, interval, true, callback);
+                    timer.start();
+                }
             }
 
         }
@@ -144,7 +180,7 @@ public class CountDown {
         public void start() {
             if (duration > 0) {
                 if (!isRunning) {
-                    timer = new Timer(duration, 1000, callback);
+                    timer = new Timer(duration, interval, loop, callback);
                     timer.start();
                 }
             } else {
@@ -185,7 +221,7 @@ public class CountDown {
                     int reduce = duration - currentMillis;
                     int newDuration = duration - reduce;
                     if (duration > 0) {
-                        timer = new Timer(newDuration, 1000, callback);
+                        timer = new Timer(newDuration, interval, loop, callback);
                         timer.start();
                         callback.onResume();
                     } else {
