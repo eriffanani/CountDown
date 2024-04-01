@@ -12,7 +12,7 @@ maven { url 'https://jitpack.io' }
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:CountDown:1.3.0'
+implementation 'com.github.eriffanani:CountDown:1.4.0'
 ```
 
 ## How to use
@@ -114,12 +114,20 @@ CountDown(date, format) {
 ```
 
 ### Locale
-* Java
+* Kotlin
 ```Kotlin
 val date = "2022-10-25 14:00:00"
 val format = "yyyy-MM-dd HH:mm:ss"
 val locale = Locale.US
 CountDown(date, format, locale) {
+    // TODO ACTION
+}
+```
+
+### Loop
+* Kotlin
+```Kotlin
+CountDown(seconds = 1, loop = true) {
     // TODO ACTION
 }
 ```
