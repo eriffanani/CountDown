@@ -11,6 +11,7 @@ import java.util.Locale;
 public class CountDown {
 
     private static final int interval = 1000;
+    private Locale locale = Locale.getDefault();
 
     public CountDown(long millis, CountDownListener callback) {
         startTimer((int) millis, callback);
@@ -26,6 +27,19 @@ public class CountDown {
         if (currentDateTimeStr != null) {
             Date firstDate = parseDate(date, dateFormat);
             Date currentDate = parseDate(currentDateTimeStr, dateFormat);
+            if (firstDate != null && currentDate != null) {
+                long count = firstDate.getTime() - currentDate.getTime();
+                int duration = (int) count;
+                startTimer(duration, callback);
+            }
+        }
+    }
+
+    public CountDown(String date, String dateFormat, Locale locale, CountDownListener callback) {
+        String currentDateTimeStr = currentDateTime(dateFormat, locale);
+        if (currentDateTimeStr != null) {
+            Date firstDate = parseDate(date, dateFormat, locale);
+            Date currentDate = parseDate(currentDateTimeStr, dateFormat, locale);
             if (firstDate != null && currentDate != null) {
                 long count = firstDate.getTime() - currentDate.getTime();
                 int duration = (int) count;
@@ -86,6 +100,20 @@ public class CountDown {
             if (currentDateTimeStr != null) {
                 Date firstDate = parseDate(date, dateFormat);
                 Date currentDate = parseDate(currentDateTimeStr, dateFormat);
+                if (firstDate != null && currentDate != null) {
+                    long count = firstDate.getTime() - currentDate.getTime();
+                    this.duration = (int) count;
+                }
+            }
+        }
+
+        public Builder(String date, String dateFormat, Locale locale, CountDownListener callback) {
+            this.callback = callback;
+            useDate = true;
+            String currentDateTimeStr = currentDateTime(dateFormat, locale);
+            if (currentDateTimeStr != null) {
+                Date firstDate = parseDate(date, dateFormat, locale);
+                Date currentDate = parseDate(currentDateTimeStr, dateFormat, locale);
                 if (firstDate != null && currentDate != null) {
                     long count = firstDate.getTime() - currentDate.getTime();
                     this.duration = (int) count;
@@ -245,10 +273,34 @@ public class CountDown {
         }
     }
 
+    private static String currentDateTime(String format, Locale locale) {
+        String result;
+        try {
+            SimpleDateFormat mFormat = new SimpleDateFormat(format, locale);
+            result = mFormat.format(new Date());
+            return result;
+        } catch (Exception e) {
+            error(e.getMessage());
+            return null;
+        }
+    }
+
     private static Date parseDate(String dateTime, String format) {
         Date result;
         try {
             SimpleDateFormat mFormat = new SimpleDateFormat(format, Locale.getDefault());
+            result = mFormat.parse(dateTime);
+            return result;
+        } catch (ParseException e) {
+            error(e.getMessage());
+            return null;
+        }
+    }
+
+    private static Date parseDate(String dateTime, String format, Locale locale) {
+        Date result;
+        try {
+            SimpleDateFormat mFormat = new SimpleDateFormat(format, locale);
             result = mFormat.parse(dateTime);
             return result;
         } catch (ParseException e) {
