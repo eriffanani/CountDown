@@ -5,9 +5,13 @@ This is a shortcut code for you to create a schedule timer and provide an action
 
 ## Installation
 
-### repositories
+### settings.gradle.kts
 ```gradle
-maven { url 'https://jitpack.io' }
+dependencyResolutionManagement {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
 ### dependencies
