@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 
 ### dependencies
 ```gradle
-implementation 'com.github.eriffanani:CountDown:1.4.0'
+implementation("com.github.eriffanani:CountDown:1.4.0")
 ```
 
 ## How to use
