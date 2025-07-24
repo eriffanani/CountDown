@@ -1,9 +1,9 @@
 plugins {
-    id("com.android.application") version "8.3.1" apply false
-    id("com.android.library") version "8.3.1" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.10" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.kotlin) apply false
 }
 
 tasks.register<Delete>("clean") {
-    delete(layout.buildDirectory.asFile)
+    delete(layout.buildDirectory.asFile.get())
 }
